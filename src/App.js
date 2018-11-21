@@ -4,7 +4,7 @@ import './App.css';
 class App extends Component {
 
   state={
-    text:'',
+    text:[],
     sizes:1,
     error:'',
     divz:[],
@@ -39,8 +39,11 @@ class App extends Component {
    //alert(groups);
   this.setState({divz: groups});
   }
-  getsize = (e) =>{
-this.setState({sizes:e.target.value.split('\n').length})
+
+  getsize = (event) =>{
+    var ta = document.getElementById("names").value;
+   // alert(ta)
+this.setState({sizes: ta.split('\n').length})
   }
 
   shuffle =(o)=> {
@@ -48,7 +51,16 @@ this.setState({sizes:e.target.value.split('\n').length})
     return o;
   };
 
-
+  handleFile =(file) =>{
+    let fr = new FileReader();
+    fr.onload = () =>{
+      console.log(fr.result);
+      this.setState({text: fr.result.split(',').join('\n')})
+      let textArea = document.getElementById("names");
+      textArea.value = fr.result.split(',').join('\n');
+    }
+    fr.readAsText(file)
+  }
 
 
 
@@ -60,13 +72,13 @@ this.setState({sizes:e.target.value.split('\n').length})
         <h1>Random Team Generator</h1>
         <form name="forms" onSubmit={this.handle}>
         
-        <label for="file">Upload from CSV: </label>
+        <label htmlFor="file">Upload from CSV: </label>
         <input type="file" name="file" id="file" className='input-file' accept='.csv' onChange={e => this.handleFile(e.target.files[0])}></input><br/>
         
-        <label for="names">Names: </label><br/>
-         <textarea style={{width:"400px",height:"300px"}} name="names" onChange={this.getsize.bind(this)} required></textarea><br/>
-        <label for="howmany">How many groups?</label><br/>
-         <input type="number" min = '1' max={this.state.sizes} name="howmany" style={{width:"300px"}}></input><br/>
+        <label htmlFor="names">Names: </label><br/>
+         <textarea style={{width:"400px",height:"300px"}} name="names" id="names" onChange={this.getsize}   required></textarea><br/>
+        <label htmlFor="howmany">How many groups?</label><br/>
+         <input type="number" min = '1' max={this.state.sizes} name="howmany" onChange={this.getsize} style={{width:"300px"}}></input><br/>
 
          <button type="submit" className="button3" >Generate</button>
          </form>
