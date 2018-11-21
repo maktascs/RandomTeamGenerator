@@ -29,9 +29,9 @@ class App extends Component {
       temp =[]
 
       for (let k =j;k<j+text.length/sizes;k++ ){
-        temp[k] = <div className="columns">{text[k]}</div>;
+        temp[k] = <span key={text[k]}>{text[k]}<br/></span>;
       }
-      groups.push("Group "+(i+1),<ol>{temp}</ol>);
+      groups.push("Group "+(i+1),<span><br/>{temp}</span>);
       j = j+Math.ceil(text.length/sizes)
       
     }
@@ -49,34 +49,44 @@ this.setState({sizes:e.target.value.split('\n').length})
   };
 
 
-  
+
 
 
   render() {
 
     return (
       <div className="App">
-        <header className="App-header">
+        <div className="div1">
         <h1>Random Team Generator</h1>
         <form name="forms" onSubmit={this.handle}>
-        <input type="file" id="file" className='input-file' accept='.csv' onChange={e => this.handleFile(e.target.files[0])}></input><br/>
+        
+        <label for="file">Upload from CSV: </label>
+        <input type="file" name="file" id="file" className='input-file' accept='.csv' onChange={e => this.handleFile(e.target.files[0])}></input><br/>
+        
+        <label for="names">Names: </label><br/>
          <textarea style={{width:"400px",height:"300px"}} name="names" onChange={this.getsize.bind(this)} required></textarea><br/>
-         <input type="number" min = '1' max={this.state.sizes} name="howmany" style={{width:"300px"}}></input>
-         <input type="submit" ></input>
+        <label for="howmany">How many groups?</label><br/>
+         <input type="number" min = '1' max={this.state.sizes} name="howmany" style={{width:"300px"}}></input><br/>
+
+         <button type="submit" className="button3" >Generate</button>
          </form>
          <div>
         
         
-         <div>{this.state.divz.map((item,i) =>
          
-            <div className="columns" key ={i}>{item}<br/></div>
-           
-         )}
-     
           </div>
           </div>
+          <div className="div1">
+          <h3 style={{marginTop:"30px"}}>Generate Teams</h3>
+    {this.state.divz.map((item,i) =>
          
-        </header>
+         <div style={{display:"inline-block",verticalAlign:"top",alignContent:"left",borderRight:"2px"}}  key ={i}>{item}<br/></div>
+        
+      )}
+  
+
+          </div>
+       
       </div>
     );
   }
