@@ -8,50 +8,49 @@ class App extends Component {
     sizes:1,
     error:'',
     divz:[],
+    spans:[]
   }
+
+// Handle form submit event
  handle =(event) => {
-   event.preventDefault();
-   if(event.target.names.value === ''){
-   
-     this.setState({error:"TextArea cannot be empty"});
+  event.preventDefault();
+  this.setState({divz:[],spans:[],text:[],size:1})
+  if(event.target.names.value === ''){
+      this.setState({error:"TextArea cannot be empty"});
    }
-    var text = event.target.names.value;
-    text = text.split('\n');
-    var sizes = parseInt(event.target.howmany.value);
-    
+  var text = event.target.names.value;
+  text = text.split('\n');
+  var sizes = parseInt(event.target.howmany.value);
+  //Shuffle the list randomly
+  text=this.shuffle(text);
  
-    text=this.shuffle(text);
- 
-    var groups = []
-    var temp =[]
-    var j =0
-    for (let i=0;i<sizes;i++){
+  var groups = []
+  var temp =[]
+  var tmp=[]
+  var j =0
+  for (let i=0;i<sizes;i++){
       temp =[]
-
       for (let k =j;k<j+text.length/sizes;k++ ){
-        temp[k] = <span key={text[k]}>{text[k]}<br/></span>;
+          temp[k] = <span key={text[k]}>{text[k]}<br/></span>;
       }
-      groups.push("Group "+(i+1),<span><br/>{temp}</span>);
+      tmp.push("Group "+(i+1))
+      groups.push(temp);
       j = j+Math.ceil(text.length/sizes)
-      
     }
-    //console.log(groups);
-   //alert(groups);
-  this.setState({divz: groups});
+      this.setState({divz: groups,spans:tmp});
   }
-
-  getsize = (event) =>{
+  //Get textarea size to limit max for groups input
+getsize = (event) =>{
     var ta = document.getElementById("names").value;
-   // alert(ta)
-this.setState({sizes: ta.split('\n').length})
+    this.setState({sizes: ta.split('\n').length})
   }
-
-  shuffle =(o)=> {
+//Shuffle algoritm
+shuffle =(o)=> {
     for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
   };
-
-  handleFile =(file) =>{
+// Handle CSV file
+handleFile =(file) =>{
     let fr = new FileReader();
     fr.onload = () =>{
       console.log(fr.result);
@@ -62,10 +61,7 @@ this.setState({sizes: ta.split('\n').length})
     fr.readAsText(file)
   }
 
-
-
-  render() {
-
+ render() {
     return (
       <div className="App">
         <div className="div1">
@@ -83,22 +79,15 @@ this.setState({sizes: ta.split('\n').length})
          <button type="submit" className="button3" >Generate</button>
          </form>
          <div>
-        
-        
-         
           </div>
           </div>
-          <div className="div1">
-          <h3 style={{marginTop:"30px"}}>Generate Teams</h3>
-    {this.state.divz.map((item,i) =>
-         
-         <div style={{display:"inline-block",verticalAlign:"top",alignContent:"left",borderRight:"2px"}}  key ={i}>{item}<br/></div>
-        
-      )}
-  
 
-          </div>
-       
+        <div className="div1">
+        <h3 style={{marginTop:"30px"}}>Generate Teams</h3>
+        {this.state.spans.map((it,j)=>
+        <div style={{display:"inline-block",width:"33%"}} ><span style={{background:"#eee",padding:'.2rem',fontWeight:'700'}}>{it}</span><br/><br/>{this.state.divz[j]}<br/></div> 
+        )}
+        </div> 
       </div>
     );
   }
